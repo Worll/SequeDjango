@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core import serializers
 
 # Create your views here.
 from django.http import HttpResponse
@@ -17,6 +18,7 @@ import string
 
 """
     // TODO - use dry principle and remove repetitive code
+    // TODO - add .env config template to documentation
 """
 
 class ListUsers(APIView):
@@ -68,24 +70,19 @@ class PlaylistView(APIView):
         """
         API endpoint that allows users to get all playlist.
         """
-        
-        scope = 'playlist-modify-public'
-        username = 'worll'
 
-        client_id=settings.SPOTIFY_CLIENT_ID
-        client_secret=settings.SPOTIFY_SECRET_KEY
-        redirect_uri=settings.SPOTIFY_REDIRECT_URI
-        token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
+        token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE, settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
 
         if token:
             sp = spotipy.Spotify(auth=token)
 
-            playlists = sp.user_playlists(username)
+            playlists = sp.user_playlists(settings.SPOTIFY_USERNAME)
             return Response(playlists)
 
         else:
             message = "Problem with authorization flow to spotify api"
-            return Response(message)
+            messageJSON = serializers.serialize('json', message)
+            return Response(data=messageJSON, status=403)
         return HttpResponse("welcome")
 
 
@@ -96,57 +93,20 @@ class PlaylistView(APIView):
         """
         API endpoint that allows users to create new playlists.
         """
-        scope = 'playlist-modify-public'
-        username = 'worll'
 
-        client_id=settings.SPOTIFY_CLIENT_ID
-        client_secret=settings.SPOTIFY_SECRET_KEY
-        redirect_uri=settings.SPOTIFY_REDIRECT_URI
-        token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
+        token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE, settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
 
         if token:
             sp = spotipy.Spotify(auth=token)
-            playlistURL = sp.user_playlist_create(username, "test")
+            playlistURL = sp.user_playlist_create(settings.SPOTIFY_USERNAME, "test")
             return Response(playlistURL['external_urls']['spotify'])            
         else:
-            message = "Problem with authorization flow to spotify api"
-            return Response(message)
+            return Response(status=403)
         return HttpResponse("welcome")
 
 
 def home(request):
     return HttpResponse("Hello, Django!")
 
-def playlists(request):
-
-    scope = 'playlist-modify-public'
-    username = 'worll'
-
-    client_id=settings.SPOTIFY_CLIENT_ID
-    client_secret=settings.SPOTIFY_SECRET_KEY
-    redirect_uri=settings.SPOTIFY_REDIRECT_URI
-    token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
-
-    if token:
-        sp = spotipy.Spotify(auth=token)
-        playlists = sp.user_playlists(username)
-        for playlist in playlists['items']:
-            if playlist['owner']['id'] == username:
-                print()
-                print(playlist['name'])
-                print ('  total tracks', playlist['tracks']['total'])
-                results = sp.playlist(playlist['id'],
-                    fields="tracks,next")
-                tracks = results['tracks']
-                while tracks['next']:
-                    tracks = sp.next(tracks)
-    else:
-        print("Can't get token for", username)
-
 def welcome(request):
     return HttpResponse("welcome")
-
-def randomString(stringLength=10):
-    """Generate a random string of fixed length """
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(stringLength))
