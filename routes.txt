@@ -20,3 +20,5 @@ GET 	search {string} -> {[song_url, song_name]}
 Bar:
 POST room/pub_code {songurl} -> (update playlist)
 GET room/room_code/token -> temp_pub_code 'SIJD435'
+
+Mindaugas jega
