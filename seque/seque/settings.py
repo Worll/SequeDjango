@@ -9,15 +9,9 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
+import django_heroku
 
 import os
-
-import environ
-env = environ.Env(
-
-)
-# reading .env file
-environ.Env.read_env()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,13 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-SPOTIFY_CLIENT_ID=env('SPOTIFY_CLIENT_ID')
-SPOTIFY_SECRET_KEY=env('SPOTIFY_SECRET_KEY')
-SPOTIFY_REDIRECT_URI=env('SPOTIFY_REDIRECT_URI')
-SPOTIFY_USERNAME=env('SPOTIFY_USERNAME')
-SCOPE=env('SCOPE')
+SPOTIFY_CLIENT_ID=os.environ.get('SPOTIFY_CLIENT_ID')
+SPOTIFY_SECRET_KEY=os.environ.get('SPOTIFY_SECRET_KEY')
+SPOTIFY_REDIRECT_URI=os.environ.get('SPOTIFY_REDIRECT_URI')
+SPOTIFY_USERNAME=os.environ.get('SPOTIFY_USERNAME')
+SCOPE=os.environ.get('SCOPE')
 
 ALLOWED_HOSTS = []
 # Application definition
@@ -135,5 +129,6 @@ REST_FRAMEWORK = {
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
+
+django_heroku.settings(locals())
