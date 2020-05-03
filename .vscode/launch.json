@@ -8,13 +8,13 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}\\seque\\manage.py",
+            "program": "${workspaceFolder}\\manage.py",
             "args": [
                 "runserver",
                 "--noreload"
             ],
             "django": true,
-            "envFile": "${workspaceFolder}/seque/seque/.env"
+            "envFile": "${workspaceFolder}/seque/.env"
 
         }
     ]
