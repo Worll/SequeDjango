@@ -17,6 +17,9 @@ import random
 import string
 import json
 
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
 """
     // TODO - use dry principle and remove repetitive code
     // TODO - add .env config template to documentation

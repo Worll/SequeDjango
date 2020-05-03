@@ -1,0 +1,22 @@
+Private party
+
+POST 	room -> pl_url, admin_code, invite_code
+GET 	room/admin_code/users -> {[sessions_id, username]}
+POST 	room/admin_code/users/kick {session_id}
+
+GET 	room/room_code/invite -> invite_code
+DELETE 	room/room_code/invite -> new_invite_code
+
+POST 	room/invite_code/users {session_id, username}
+
+POST 	room/invite_code/playlist/add {song_url, session_id}
+POST 	room/invite_code/playlist/vote_up {song_id, session_id}
+POST 	room/invite_code/playlist/vote_down {song_id, session_id}
+
+GET 	search {string} -> {[song_url, song_name]}
+
+-- API session_id timeouts
+
+Bar:
+POST room/pub_code {songurl} -> (update playlist)
+GET room/room_code/token -> temp_pub_code 'SIJD435'

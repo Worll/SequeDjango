@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "c:\\Users\\Arnas\\Documents\\GitHub\\SequeDjango\\.env\\Scripts\\python.exe"
+    "python.pythonPath": "c:\\Users\\Arnas\\Documents\\GitHub\\SequeDjango\\.env\\Scripts\\python.exe",
+    "python.linting.enabled": true
 }
