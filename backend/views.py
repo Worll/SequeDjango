@@ -75,7 +75,7 @@ class PlaylistView(APIView):
         """
         API endpoint that allows users to get all playlist.
         """
-
+        
         token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE, settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
 
         if token:
