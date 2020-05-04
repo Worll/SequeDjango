@@ -13,8 +13,7 @@
                 "runserver",
                 "--noreload"
             ],
-            "django": true,
-            "envFile": "${workspaceFolder}/seque/.env"
+            "django": true
 
         }
     ]
