@@ -1,1 +1,1 @@
-web: gunicorn seque.wsgi.py
+web: gunicorn seque.wsgi
