@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+from datetime import timedelta
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -24,12 +25,8 @@ DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
+SPOTIFY_USERNAME = os.environ.get('SPOTIFY_USERNAME')
 
-SPOTIFY_CLIENT_ID=os.environ.get('SPOTIFY_CLIENT_ID')
-SPOTIFY_SECRET_KEY=os.environ.get('SPOTIFY_SECRET_KEY')
-SPOTIFY_REDIRECT_URI=os.environ.get('SPOTIFY_REDIRECT_URI')
-SPOTIFY_USERNAME=os.environ.get('SPOTIFY_USERNAME')
-SCOPE=os.environ.get('SCOPE')
 
 ALLOWED_HOSTS = []
 # Application definition
@@ -125,6 +122,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=4320),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
+
 }
 
 # Static files (CSS, JavaScript, Images)
