@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core import serializers
+from django.forms.models import model_to_dict
 
 # Create your views here.
 from django.http import HttpResponse
@@ -47,9 +48,15 @@ class UserInfo(APIView):
         """
         API endpoint that allows users to be viewed or edited.
         """
+        
         username = request.user.username
         user = User.objects.get(username=username)
-        return Response(user)
+
+        # assuming obj is your model instance
+        user_obj = model_to_dict( user )
+        user_obj.pop('password', None)
+
+        return Response(user_obj)
 
     def post(self, request, format=None):
         """
