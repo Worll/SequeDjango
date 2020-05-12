@@ -159,6 +159,17 @@ class PlaylistView(APIView):
         """
         API endpoint that allows users to get all playlist.
         """
+<<<<<<< HEAD
+=======
+
+        token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE, settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
+
+        if token:
+            sp = spotipy.Spotify(auth=token)
+
+            playlists = sp.user_playlists(settings.SPOTIFY_USERNAME)
+            return Response(playlists)
+>>>>>>> parent of d63f562... introduce security breach
 
         spotify = spotipy.Spotify(
             client_credentials_manager=SpotifyClientCredentials())
