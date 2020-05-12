@@ -5,6 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "python",
+            "request": "launch",
+            "name": "Launch Make Migrations",
+            "program": "${workspaceFolder}\\manage.py",
+            "args": [
+                "makemigrations",
+            ]
+        },
+        {
+            "type": "python",
+            "request": "launch",
+            "name": "Launch Migrations",
+            "program": "${workspaceFolder}\\manage.py",
+            "args": [
+                "migrate",
+            ]
+        },
+        {
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
@@ -14,7 +32,6 @@
                 "--noreload"
             ],
             "django": true
-
         }
     ]
 }

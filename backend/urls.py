@@ -7,11 +7,11 @@ urlpatterns = [
             name="user_registration"),
     path("", views.home, name="home"),
     path("api/welcome", views.welcome, name="welcome"),
-    #     re_path(r'^api/playlists(\/)?$',
-    #             views.PlaylistView.as_view(), name="playlists"),
-    #     path("playlists/<str:playlist_id>",
-    #          views.PlaylistView.as_view(), name="playlists"),
     re_path(r'^api/room(\/)?$', views.RoomView.as_view(),
-            name="room")
+            name="room"),
+    path("api/room/<int:room_id>/", views.RoomView.as_view(),
+         name="room_by_id"),
+    path("api/search/<query>", views.SearchView.as_view(), name="search"),
+
 
 ]

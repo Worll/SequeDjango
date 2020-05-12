@@ -17,6 +17,9 @@ from rest_framework import viewsets
 import random
 import string
 import json
+import uuid
+
+from .models import *
 
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -81,49 +84,43 @@ class UserInfo(APIView):
         return Response(usernames)
 
 
-class ListUsers(APIView):
-    """
-    View to list all users in the system.
+class SearchView(APIView):
 
-    // TODO - add authorization/authentication
+    permission_classes = (IsAuthenticated,)
 
-    * Requires token authentication.
-    * Only admin users are able to access this view.
-    """
+    def get(self, request, query):
+        if not query:
+            return Response(status=400)
 
-    def get(self, request, format=None):
-        """
-        Return a list of all users.
-        """
-        """
-        API endpoint that allows users to be viewed or edited.
-        """
-        usernames = [user.username for user in User.objects.all()]
-        return Response(usernames)
+        spotify = spotipy.Spotify(
+            client_credentials_manager=SpotifyClientCredentials())
+        results = spotify.search(q=query, type='track')
 
-    def post(self, request, format=None):
-        """
-        Return a list of all users.
-        """
-        """
-        API endpoint that allows users to be viewed or edited.
-        """
-        usernames = [user.username for user in User.objects.all()]
-        return Response(usernames)
+        return Response(results)
 
 
 class RoomView(APIView):
-    """
-    View to modify playlists.
 
-    // TODO - add authorization/authentication
-
-    * Requires token authentication.
-    * Only admin users are able to access this view.
-    """
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request, playlist_id, format=None):
+    def get(self, request, room_id):
+        """
+        Return a list of all users.
+        """
+        """
+        API endpoint that allows users to be viewed or edited.
+        """
+
+        user_id = request.user.id
+
+        room = Room.objects.get(pk=room_id)
+
+        if room.organizer != user_id:
+            pass  # TODO: null not organiser fields (not organiser fields)
+
+        return Response(model_to_dict(room))
+
+    def post(self, request, format=None):
         """
         Create and return newl playlist's url.
         """
@@ -133,81 +130,20 @@ class RoomView(APIView):
         token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE,
                                            settings.SPOTIPY_CLIENT_ID, settings.SPOTIPY_CLIENT_SECRET, settings.SPOTIFY_REDIRECT_URI)
 
-        if token:
-            sp = spotipy.Spotify(auth=token)
-            playlist = sp.user_playlist_create(
-                settings.SPOTIFY_USERNAME, "test")
-            playlistURL = playlist['external_urls']['spotify']
-            playlistURL_DIC = {'playlistURL': playlistURL}
-            return Response(playlistURL_DIC)
-        else:
+        if not token:
             return Response(status=403)
 
+        sp = spotipy.Spotify(auth=token)
+        playlist = sp.user_playlist_create(
+            settings.SPOTIFY_USERNAME, "test")
+        playlistURL = playlist['external_urls']['spotify']
 
-# class PlaylistView(APIView):
-#     permission_classes = (IsAuthenticated,)
-#     """
-#     View to modify playlists.
-
-#     // TODO - add authorization/authentication
-
-#     * Requires token authentication.
-#     * Only admin users are able to access this view.
-#     """
-
-#     def get(self, request, playlist_id, format=None):
-#         """
-#         Return a list of all playlists.
-
-#         // TODO - delete this function, it's only for testing purposes and should not be allowed for users
-#         """
-#         """
-#         API endpoint that allows users to get all playlist.
-#         """
-
-#         token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE,
-#                                            settings.SPOTIPY_CLIENT_ID, settings.SPOTIPY_SECRET_KEY, settings.SPOTIPY_REDIRECT_URI)
-
-#         if token:
-#             sp = spotipy.Spotify(auth=token)
-
-#             playlists = sp.user_playlists(settings.SPOTIFY_USERNAME)
-#             return Response(playlists)
-
-#         spotify = spotipy.Spotify(
-#             client_credentials_manager=SpotifyClientCredentials())
-#         playlists = spotify.user_playlists(settings.SPOTIFY_USERNAME)
-
-#         return Response(playlists)
-
-#     def post(self, request, playlist_id, format=None):
-#         """
-#         Create and return newl playlist's url.
-#         """
-#         """
-#         API endpoint that allows users to create new playlists.
-#         """
-#         sp = spotipy.Spotify(
-#             client_credentials_manager=SpotifyClientCredentials())
-#         playlist = sp.user_playlist_create(settings.SPOTIFY_USERNAME, "test")
-#         playlistURL = playlist['external_urls']['spotify']
-#         playlistURL_DIC = {'playlistURL': playlistURL}
-
-#         return Response(playlistURL_DIC)
-
-#     def put(self, request, playlist_id, format=None):
-#         uris = ["1lKBe4bDNB61QkvZjPBYxJ"]
-#         token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE,
-#                                            settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
-
-#         if token:
-#             sp = spotipy.Spotify(auth=token)
-#             sp.trace = False
-#             results = sp.user_playlist_add_tracks(
-#                 settings.SPOTIFY_USERNAME, playlist_id, uris)
-#             return Response(results, status=200)
-#         else:
-#             return Response(status=403)
+        username = request.user.username
+        user = User.objects.get(username=username)
+        inviteCode = '{}'.format(uuid.uuid4())[:8]
+        room = Room.objects.create_instance(organizer=user,
+                                            playlistUrl=playlistURL, inviteCode=inviteCode)
+        return Response({"uid": room.uid})
 
 
 class TrackView(APIView):
