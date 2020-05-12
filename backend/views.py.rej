@@ -1,0 +1,16 @@
+diff a/backend/views.py b/backend/views.py	(rejected hunks)
+@@ -124,17 +124,12 @@
+         """
+         API endpoint that allows users to create new playlists.
+         """
+-
+
++        sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
++        playlist = sp.user_playlist_create(settings.SPOTIFY_USERNAME, "test")
++        playlistURL = playlist['external_urls']['spotify']
++        playlistURL_DIC = {'playlistURL': playlistURL }
++        
++        return Response(playlistURL_DIC)            
+ 
+     def put(self, request, playlist_id, format=None):
+         uris= ["1lKBe4bDNB61QkvZjPBYxJ"]

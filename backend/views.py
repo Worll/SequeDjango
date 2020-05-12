@@ -130,81 +130,84 @@ class RoomView(APIView):
         """
         API endpoint that allows users to create new playlists.
         """
-        sp = spotipy.Spotify(
-            client_credentials_manager=SpotifyClientCredentials())
-        playlist = sp.user_playlist_create(settings.SPOTIFY_USERNAME, "test")
-        playlistURL = playlist['external_urls']['spotify']
-        playlistURL_DIC = {'playlistURL': playlistURL}
-
-        return Response(playlistURL_DIC)
-
-
-class PlaylistView(APIView):
-    permission_classes = (IsAuthenticated,)
-    """
-    View to modify playlists.
-
-    // TODO - add authorization/authentication
-
-    * Requires token authentication.
-    * Only admin users are able to access this view.
-    """
-
-    def get(self, request, playlist_id, format=None):
-        """
-        Return a list of all playlists.
-
-        // TODO - delete this function, it's only for testing purposes and should not be allowed for users
-        """
-        """
-        API endpoint that allows users to get all playlist.
-        """
-<<<<<<< HEAD
-=======
-
-        token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE, settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
-
-        if token:
-            sp = spotipy.Spotify(auth=token)
-
-            playlists = sp.user_playlists(settings.SPOTIFY_USERNAME)
-            return Response(playlists)
->>>>>>> parent of d63f562... introduce security breach
-
-        spotify = spotipy.Spotify(
-            client_credentials_manager=SpotifyClientCredentials())
-        playlists = spotify.user_playlists(settings.SPOTIFY_USERNAME)
-
-        return Response(playlists)
-
-    def post(self, request, playlist_id, format=None):
-        """
-        Create and return newl playlist's url.
-        """
-        """
-        API endpoint that allows users to create new playlists.
-        """
-        sp = spotipy.Spotify(
-            client_credentials_manager=SpotifyClientCredentials())
-        playlist = sp.user_playlist_create(settings.SPOTIFY_USERNAME, "test")
-        playlistURL = playlist['external_urls']['spotify']
-        playlistURL_DIC = {'playlistURL': playlistURL}
-
-        return Response(playlistURL_DIC)
-
-    def put(self, request, playlist_id, format=None):
-        uris = ["1lKBe4bDNB61QkvZjPBYxJ"]
         token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE,
-                                           settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
+                                           settings.SPOTIPY_CLIENT_ID, settings.SPOTIPY_CLIENT_SECRET, settings.SPOTIFY_REDIRECT_URI)
 
         if token:
             sp = spotipy.Spotify(auth=token)
-            sp.trace = False
-            results = sp.user_playlist_add_tracks(
-                settings.SPOTIFY_USERNAME, playlist_id, uris)
-            return Response(results, status=200)
+            playlist = sp.user_playlist_create(
+                settings.SPOTIFY_USERNAME, "test")
+            playlistURL = playlist['external_urls']['spotify']
+            playlistURL_DIC = {'playlistURL': playlistURL}
+            return Response(playlistURL_DIC)
         else:
             return Response(status=403)
+
+
+# class PlaylistView(APIView):
+#     permission_classes = (IsAuthenticated,)
+#     """
+#     View to modify playlists.
+
+#     // TODO - add authorization/authentication
+
+#     * Requires token authentication.
+#     * Only admin users are able to access this view.
+#     """
+
+#     def get(self, request, playlist_id, format=None):
+#         """
+#         Return a list of all playlists.
+
+#         // TODO - delete this function, it's only for testing purposes and should not be allowed for users
+#         """
+#         """
+#         API endpoint that allows users to get all playlist.
+#         """
+
+#         token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE,
+#                                            settings.SPOTIPY_CLIENT_ID, settings.SPOTIPY_SECRET_KEY, settings.SPOTIPY_REDIRECT_URI)
+
+#         if token:
+#             sp = spotipy.Spotify(auth=token)
+
+#             playlists = sp.user_playlists(settings.SPOTIFY_USERNAME)
+#             return Response(playlists)
+
+#         spotify = spotipy.Spotify(
+#             client_credentials_manager=SpotifyClientCredentials())
+#         playlists = spotify.user_playlists(settings.SPOTIFY_USERNAME)
+
+#         return Response(playlists)
+
+#     def post(self, request, playlist_id, format=None):
+#         """
+#         Create and return newl playlist's url.
+#         """
+#         """
+#         API endpoint that allows users to create new playlists.
+#         """
+#         sp = spotipy.Spotify(
+#             client_credentials_manager=SpotifyClientCredentials())
+#         playlist = sp.user_playlist_create(settings.SPOTIFY_USERNAME, "test")
+#         playlistURL = playlist['external_urls']['spotify']
+#         playlistURL_DIC = {'playlistURL': playlistURL}
+
+#         return Response(playlistURL_DIC)
+
+#     def put(self, request, playlist_id, format=None):
+#         uris = ["1lKBe4bDNB61QkvZjPBYxJ"]
+#         token = util.prompt_for_user_token(settings.SPOTIFY_USERNAME, settings.SCOPE,
+#                                            settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_SECRET_KEY, settings.SPOTIFY_REDIRECT_URI)
+
+#         if token:
+#             sp = spotipy.Spotify(auth=token)
+#             sp.trace = False
+#             results = sp.user_playlist_add_tracks(
+#                 settings.SPOTIFY_USERNAME, playlist_id, uris)
+#             return Response(results, status=200)
+#         else:
+#             return Response(status=403)
 
 
 class TrackView(APIView):

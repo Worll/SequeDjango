@@ -30,6 +30,7 @@ SPOTIFY_USERNAME = os.environ.get('SPOTIFY_USERNAME')
 SPOTIPY_CLIENT_ID = os.environ.get('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.environ.get('SPOTIPY_CLIENT_SECRET')
 SCOPE = os.environ.get('SCOPE')
+SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/welcome'
 
 ALLOWED_HOSTS = []
 # Application definition
