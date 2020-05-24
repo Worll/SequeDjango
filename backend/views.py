@@ -27,6 +27,11 @@ from rest_framework.permissions import IsAuthenticated
 from spotipy.oauth2 import SpotifyClientCredentials
 
 
+def detail(request):
+    html = '< a href = "{% url "social: begin" "spotify" %}" > Spotify < /a >'
+    return render(request, 'greeting.html')
+
+
 class RegisterUser(APIView):
 
     def post(self, request, format=None):

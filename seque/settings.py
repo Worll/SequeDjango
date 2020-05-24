@@ -22,21 +22,33 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 SPOTIFY_USERNAME = os.environ.get('SPOTIFY_USERNAME')
 
 SPOTIPY_CLIENT_ID = os.environ.get('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.environ.get('SPOTIPY_CLIENT_SECRET')
 SCOPE = os.environ.get('SCOPE')
-SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/welcome'
 
+SOCIAL_AUTH_SPOTIFY_KEY = '0bd07c917b0b403d8578bc47e7f0de99'
+SOCIAL_AUTH_SPOTIFY_SECRET = '9c06164324c44f03a0df08a0a34fc382'
+SOCIAL_AUTH_SPOTIFY_SCOPE = ['user-read-email', 'user-library-read']
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:8080/'
+
+# SECRET_KEY = '(4a@m0j6#usem*0#p2lxmq20o#!)9s=ixajmc8uns1ywzw'
+# SPOTIPY_CLIENT_ID = '0bd07c917b0b403d8578bc47e7f0de99'
+# SPOTIPY_CLIENT_SECRET = '9c06164324c44f03a0df08a0a34fc382'
+# SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/welcome'
+# SPOTIFY_USERNAME = 'worll'
+# SCOPE = 'playlist-modify-public'
 
 ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions',
     'backend',
     'corsheaders',
     'django.contrib.admin',
@@ -46,6 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'social_django',
+
 
 ]
 
@@ -60,6 +74,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.spotify.SpotifyOAuth2',
+)
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -80,7 +98,9 @@ TEMPLATES = [
         },
     },
 ]
-
+TEMPLATE_DIRS = (
+    os.path.join(SETTINGS_PATH, 'templates'),
+)
 WSGI_APPLICATION = 'seque.wsgi.application'
 
 
